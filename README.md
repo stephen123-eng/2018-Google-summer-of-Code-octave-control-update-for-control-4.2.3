@@ -1,60 +1,76 @@
-# Octave control package
+# Octave control package — Compatibility Update
 
-This is the official repository for the control package for GNU Octave.
+This repository contains an **unofficial update of the GNU Octave `control` package**. It is **not the official repository for the GNU Octave control package** and is not maintained by or affiliated with the GNU Octave project.
 
 ## About
 
 The **control** package is a collection of functions for control systems design and analysis.
 
-As of 24.03.2023, the development of the **control** package was moved from [SourceForge](https://sourceforge.net/p/octave/control/ci/default/tree/) and [Mercurial](https://en.wikipedia.org/wiki/Mercurial) to [GitHub](https://github.com/gnu-octave/pkg-control) and [Git](https://en.wikipedia.org/wiki/Git). Links related to the control package
+This repository is based on the work in [EriveltonGualter/octave-control](https://github.com/EriveltonGualter/octave-control). The original project was based on an older version of the GNU Octave `control` package.
 
-- [License and copyright information](https://github.com/gnu-octave/pkg-control/blob/main/COPYING)
-- [Releases](https://github.com/gnu-octave/pkg-control/releases)
-- [Documentation](https://gnu-octave.github.io/pkg-control)
+I made updates to the source code so that the package could be used with a newer version of GNU Octave. The updated package was tested using **GNU Octave 11.3.0**.
+
+This repository can be used as a replacement for the **control package version 4.2.3**. It contains the complete source tree for the updated package, including the files and directories required to install the package.
+
+The package archive `control-4.2.4.tar.gz` is also included in this repository and can be installed directly in GNU Octave.
+
+## Installing the updated control package
+
+The repository contains a ready-to-install package archive:
+
+`control-4.2.4.tar.gz`
+
+To install the package, first change to the directory containing this repository and the package archive.
+
+Then, in GNU Octave, type
+
+`pkg install control-4.2.4.tar.gz`<br>
+`pkg load control`
+
+The first command installs the package and the second command loads it into the current Octave session.
+
+After loading the package, the `control` package functions should be available for use.
+
+### Compatibility
+
+The updated package was tested using:
+
+* **GNU Octave 11.3.0**
+
+The testing was performed using GNU Octave 11.3.0 to verify that the package could be installed, loaded, and used with this newer version of Octave.
+
+Compatibility with other versions of GNU Octave has not necessarily been tested.
+
+## Relationship to the official GNU Octave control package
+
+This repository should not be confused with the official GNU Octave `control` package.
+
+The official `control` package is maintained separately by the GNU Octave project and is available at the [official GNU Octave control repository](https://github.com/gnu-octave/pkg-control).
+
+For the official package, current development, releases, and documentation, please refer to the official repository.
+
+This repository is an **unofficial compatibility/update project** based on earlier `control` package source code.
+
+## Original Source
+
+The updates in this repository are based on the work available at [EriveltonGualter/octave-control](https://github.com/EriveltonGualter/octave-control).
+
+The original project and its authors should be credited for the underlying work.
 
 ## Used Library SLICOT
 
-Control uses some routines of the [SLICOT-Reference library](https://github.com/SLICOT/SLICOT-Reference) (Copyright (c)  1996-2025, The SLICOT Team). The sources of the used routines are included in the released control package archive `control-x.y.z.tar.gz` in the directory `src/slicot-src` and are compiled for the target system while installing the control package for Octave.
+The control package uses some routines from the [SLICOT-Reference library](https://github.com/SLICOT/SLICOT-Reference).
 
-The SLICOT files are available under the *BSD 3-Clause License* which can be found
+The SLICOT-related source files included in this repository are subject to the applicable SLICOT licensing terms.
 
-- in the file `src/slicot-src/LICENSE` (together with README files) in the package archive `control-x.y.z.tar.gz`,
-- in the file `doc/SLICOT/LICENSE` (together with README files) in the package installation directory, or
-- in the [SLICOT-Reference repository](https://github.com/SLICOT/SLICOT-Reference/blob/main/LICENSE).
+The SLICOT files are available under the *BSD 3-Clause License*. The applicable license information is included with the source files.
 
-Reference:
+## License
 
-- Köhler, M., Saak, J., Sima, V., & Varga, A. (2025). SLICOT - Subroutine Library In COntrol Theory (Version 5.9.1) [Computer software]. DOI: [10.5281/zenodo.17523371](https://doi.org/10.5281/zenodo.17523371)
+Please see the `COPYING` and other license files included in this repository for the licensing terms applicable to the source code.
 
-## Installing the control package
+## Disclaimer
 
-### Installing released package version
+This is an unofficial project. It is not an official release of the GNU Octave `control` package and is not affiliated with or endorsed by the GNU Octave project.
 
-The easiest way to install the newest control package is to type
-
-  `pkg install control`
-
-For installing a certain version x.y.z of the control package, you may
-
-- download the package archive file `control-x.y.z.tar.gz` of one of the [releases](https://github.com/gnu-octave/pkg-control/releases) and install it by typing
-  `pkg install control-x.y.z.tar.gz` or
-- directly issue the command `pkg install "https://github.com/gnu-octave/pkg-control/releases/download/control-x.y.z/control-x.y.z.tar.gz"`
-
-### Creating and installing package archives from the sources
-
-You can also clone this repository (using the option `--recurse-submodules` since SLICOT is included as git submodule) and build the package archive file by yourself. For this, you can use the following commands:
-
-- `make dist`<br>
-  Create the package archive file in the directory `target` which can be installed
-  in Octave afterwards. If `make DOCS_EXAMPLES=true dist` is used, the documentation
-  files (pdf and qch for Octave's documentation browser) will contain the demos of
-  the package as examples together with the resulting plots. However, for this the
-  control package has to be installed.
-- `make install`<br>
-  Install the package
-- `make help`<br>
-  Show all targets for `make`
-
-## Contributing to the control package
-
-Information on how to contribute to the control package can be found in [this document](CONTRIBUTING.md).
+The package is provided as-is. Users should verify compatibility with the version of GNU Octave they are using.
