@@ -1,6 +1,13 @@
 # Octave control package — Compatibility Update
 
-This repository contains an **unofficial update of the GNU Octave `control` package**. It is **not the official repository for the GNU Octave control package** and is not maintained by or affiliated with the GNU Octave project.
+This repository contains an **unofficial update of the GNU Octave `control` package**, with an updated version of the **Interactive Tool for Single Input Single Output (SISO) Linear Control System Design**.
+
+The SISO interactive tool was originally developed in the [EriveltonGualter/octave-control](https://github.com/EriveltonGualter/octave-control) repository. The code in this repository includes updates to that tool to allow it to work with newer versions of GNU Octave.
+
+This repository is **not the official repository for the GNU Octave `control` package** and is not maintained by or affiliated with the GNU Octave project.
+
+The updated package was tested using **GNU Octave 11.3.0**.
+
 
 ## About
 
