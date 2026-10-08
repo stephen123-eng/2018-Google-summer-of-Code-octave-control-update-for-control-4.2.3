@@ -1,0 +1,126 @@
+## Copyright (C) 2009-2016   Lukas F. Reichlin
+##
+## This file is part of LTI Syncope.
+##
+## LTI Syncope is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## LTI Syncope is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with LTI Syncope.  If not, see <http://www.gnu.org/licenses/>.
+
+## -*- texinfo -*-
+## Return frequency response H and frequency vector w.
+## If w is empty, it will be calculated by __frequency_vector__.
+
+## Author: Lukas Reichlin <lukas.reichlin@gmail.com>
+## Created: November 2009
+## Version: 0.7
+
+function [H, w, sty, idx, H_auto, w_auto, sys_names] = __frequency_response__ (caller, args, nout=0, names={})
+  ## varargin: nout = 0, names
+
+  ## CALLER         | MIMO  | RANGE | CELL  |
+  ## ---------------+-------+-------+-------+
+  ## bode           | false | std   | false |
+  ## bodemag        | false | std   | false |
+  ## nichols        | false | ext   | false |
+  ## nyquist        | false | ext   | false |
+  ## sensitivity    | false | ext   | false |
+  ## sigma          | true  | std   | true  |
+
+  mimoflag = false;
+  cellflag = false;
+  wbounds = "std";
+
+  if (strcmp (caller, {"sigma"}))
+    mimoflag = true;
+    cellflag = true;
+  endif
+
+  if (any (strcmp (caller, {"nyquist", "nichols", "sensitivity"})))
+    wbounds = "ext";
+  endif
+
+  [sys_idx, frd_idx, w_idx, r_idx, s_idx, sys_names, sty] = ...
+    __control_args__ (args, {"@lti", "@frd", @is_real_vector, @iscell, @ischar}, names);
+
+  inv_idx = ! (sys_idx | w_idx | r_idx | s_idx);    # look for invalid arguments
+
+  if (any (inv_idx))
+    warning ("%s: argument(s) number %s are invalid and are being ignored\n", ...
+             caller, mat2str (find (inv_idx)(:).'));
+  endif
+
+  if (nnz (sys_idx) == 0)
+    error ("%s: require at least one LTI model", caller);
+  endif
+
+  if (nout > 0 && (nnz (sys_idx) > 1 || any (s_idx)))
+    print_usage (caller);
+  endif
+
+  if (! mimoflag && ! all (cellfun (@issiso, args(sys_idx))))
+    error ("%s: require SISO systems", caller);
+  endif
+
+  if (any (find (s_idx) < find (sys_idx)(1)))
+    warning ("%s: strings in front of first LTI model are being ignored\n", caller);
+  endif
+
+  ## determine frequency vectors
+  auto = false;
+  w_auto = __frequency_vector__ (args(sys_idx), wbounds);
+  if (any (r_idx))                                  # if there are frequency ranges
+    if (nnz (r_idx) > 1)
+      warning ("%s: several frequency ranges specified, taking the last one\n", caller);
+    endif
+    r = args(r_idx){end};
+    if (numel (r) == 2 && issample (r{1}) && issample (r{2}) && r{1} < r{2})
+      w = __frequency_vector__ (args(sys_idx), wbounds, r{1}, r{2});
+    else
+      error ("%s: the cell defining the desired frequency range is invalid", caller);
+    endif
+  elseif (any (w_idx))                              # are there any frequency vectors?
+    if (nnz (r_idx) > 1)
+      warning ("%s: several frequency vectors specified, taking the last one\n", caller);
+    endif
+    w = args(w_idx){end};
+    if (size (w,2) > 100000)
+      warning ([caller, ": frequency response requested for a very\n",...
+                "         long frequency vector (",num2str(size(w,2))," elements).\n",...
+                "         The computation may take very long. If the\n",...
+                "         frequency vector is omitted, a suitable vector\n",...
+                "         will be selected automatically.\n"]);
+    endif
+    w = repmat ({w}, 1, nnz (sys_idx));
+  else                                              # there are neither frequency ranges nor vectors
+    w = w_auto;
+    auto = true;
+  endif
+
+  ## temporarily save frequency vectors of FRD models
+  w_frd = cellfun (@(x) get (x, "w"), args(frd_idx), "uniformoutput", false);
+  w(frd_idx) = {[]};                                # freqresp returns all frequencies of FRD models for w=[]
+
+  ## compute frequency response H for all LTI models
+  H_auto = cellfun (@__freqresp__, args(sys_idx), w_auto, {cellflag}, "uniformoutput", false);
+  if (auto)
+    H = H_auto;
+  else
+    H = cellfun (@__freqresp__, args(sys_idx), w, {cellflag}, "uniformoutput", false);
+  endif
+
+  ## restore frequency vectors of FRD models in w
+  w(frd_idx) = w_frd;
+
+  ## system indices
+  idx = find (sys_idx);
+
+endfunction
