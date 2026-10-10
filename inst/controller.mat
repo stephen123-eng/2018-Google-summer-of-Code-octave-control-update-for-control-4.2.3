@@ -1,4 +1,4 @@
-# Created by Octave 11.3.0, Wed Oct 07 21:55:44 2026 CDT
+# Created by Octave 11.3.0, Fri Oct 09 22:06:57 2026 CDT
 # name: C
 # type: class
 # classname: tf
@@ -20,10 +20,8 @@
 # rows: 1
 # columns: 1
 # name: <cell-element>
-# type: matrix
-# rows: 1
-# columns: 2
- 1 0
+# type: scalar
+1
 
 
 
@@ -195,10 +193,8 @@
 # rows: 1
 # columns: 1
 # name: <cell-element>
-# type: matrix
-# rows: 1
-# columns: 3
- 1000 21999.999999999891 39999.999999999854
+# type: scalar
+1
 
 
 
@@ -220,7 +216,7 @@
 # type: string
 # elements: 1
 # length: 1
-s
+x
 
 
 
