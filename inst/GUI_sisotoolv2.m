@@ -1,5 +1,3 @@
-## 16.06.2016 Erivelton Gualter dos Santos <erivelton.gualter@gmail.com>
-## Unified Single-Window SISO Tool with Embedded Edit Controller Tab
 function GUI_sisotoolv2(varargin)
   global fig1 h1 h2 h3
 
@@ -33,42 +31,50 @@ function GUI_sisotoolv2(varargin)
   % Main Response Axes (Top-Left)
   h1.ax1 = axes('Parent', fig1, 'Units', 'normalized', 'Position', [0.05, 0.55, 0.42, 0.38]);
 
-  % Control & Configuration Panel (Bottom-Left)
+% Control & Configuration Panel (Bottom-Left)
   ctrl_panel = uipanel('Parent', fig1, 'Title', 'Design Controls', ...
                        'Units', 'normalized', 'Position', [0.05, 0.05, 0.42, 0.46]);
 
-  % Plant Input & Controls
+  % Plant Input & Controls (Top of Panel)
   uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Plant G(s):', ...
-            'Units', 'normalized', 'Position', [0.05, 0.83, 0.3, 0.1], 'HorizontalAlignment', 'left');
+            'Units', 'normalized', 'Position', [0.05, 0.78, 0.25, 0.12], 'HorizontalAlignment', 'left');
 
   h1.enter_plant = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '0.01 / ((s+10)*(s+2))', ...
-                             'Units', 'normalized', 'Position', [0.35, 0.83, 0.6, 0.12], ...
+                             'Units', 'normalized', 'Position', [0.32, 0.78, 0.63, 0.13], ...
                              'BackgroundColor', 'white', 'Callback', @update_plant_cb);
 
   h1.select_mainaxes = uicontrol('Parent', ctrl_panel, 'Style', 'popupmenu', ...
                                  'Units', 'normalized', 'String', {'Step Response', 'Impulse Response', 'Control Effort'}, ...
-                                 'Position', [0.05, 0.66, 0.9, 0.12], 'Callback', @(~,~) plots());
+                                 'Position', [0.05, 0.62, 0.9, 0.13], 'Callback', @(~,~) plots());
 
   h1.btn_savecontroller = uicontrol('Parent', ctrl_panel, 'Style', 'pushbutton', 'String', 'Save Controller', ...
-                                    'Units', 'normalized', 'Position', [0.05, 0.48, 0.42, 0.12], 'Callback', @(~,~) call_save_controller());
+                                    'Units', 'normalized', 'Position', [0.05, 0.47, 0.42, 0.12], 'Callback', @(~,~) call_save_controller());
 
   h1.btn_editcontroller = uicontrol('Parent', ctrl_panel, 'Style', 'pushbutton', 'String', 'Edit Controller...', ...
-                                    'Units', 'normalized', 'Position', [0.53, 0.48, 0.42, 0.12], 'Callback', @(~,~) switch_tab(4));
+                                    'Units', 'normalized', 'Position', [0.53, 0.47, 0.42, 0.12], 'Callback', @(~,~) switch_tab(4));
 
   % Wide Gain Slider and Live Text Readout
   uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Gain:', ...
-            'Units', 'normalized', 'Position', [0.05, 0.28, 0.12, 0.1], 'HorizontalAlignment', 'left');
+            'Units', 'normalized', 'Position', [0.05, 0.33, 0.12, 0.1], 'HorizontalAlignment', 'left');
 
   h1.slider_gain = uicontrol('Parent', ctrl_panel, 'Style', 'slider', 'Min', 0.01, 'Max', 100, 'Value', 1, ...
-                             'Units', 'normalized', 'Position', [0.18, 0.28, 0.62, 0.1], 'Callback', @slider_adjustgain);
+                             'Units', 'normalized', 'Position', [0.18, 0.33, 0.52, 0.1], 'Callback', @slider_adjustgain);
 
   h1.txt_gain_val = uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', '1.00', ...
-                              'Units', 'normalized', 'Position', [0.82, 0.28, 0.13, 0.1], ...
+                              'Units', 'normalized', 'Position', [0.72, 0.33, 0.22, 0.1], ...
                               'HorizontalAlignment', 'center', 'FontWeight', 'bold');
 
-  % Status Label
+  % Max Gain Configuration Input
+  uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Max Gain:', ...
+            'Units', 'normalized', 'Position', [0.05, 0.18, 0.25, 0.1], 'HorizontalAlignment', 'left');
+
+  h1.enter_maxgain = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '100', ...
+                               'Units', 'normalized', 'Position', [0.32, 0.18, 0.35, 0.1], ...
+                               'BackgroundColor', 'white', 'Callback', @update_max_gain_cb);
+
+  % Status Label (Bottom of Panel)
   h1.lbl_plant = uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Status: Ready', ...
-                           'Units', 'normalized', 'Position', [0.05, 0.05, 0.9, 0.18], 'HorizontalAlignment', 'left');
+                           'Units', 'normalized', 'Position', [0.05, 0.03, 0.9, 0.12], 'HorizontalAlignment', 'left');
 
   % 2. Native Tab Emulation Buttons at the top right
   uicontrol('Parent', fig1, 'Style', 'pushbutton', 'String', 'Root Locus', ...
@@ -118,8 +124,6 @@ function setup_edit_controller_panel(parent_panel, fig)
 
   h3.gain_box = uicontrol('Parent', p, 'Style', 'edit', 'Units', 'normalized', 'String', '1', ...
                           'Position', [0.42, 0.35, 0.18, 0.35], 'BackgroundColor', 'white', 'Callback', @call_update_gain);
-
-  % Redundant static 'x' removed here
 
   h3.lbl_num = uicontrol('Parent', p, 'Style', 'text', 'Units', 'normalized', 'String', '', ...
                          'HorizontalAlignment', 'left', 'Position', [0.62, 0.15, 0.36, 0.7]);
@@ -332,8 +336,38 @@ function [olpol, olzer, k, flag] = getZP_local(sys)
   [~, ~, k] = zpkdata(sys);
 endfunction
 
-% --- Refresh All Views ---
+% --- Update Slider Max Limit Callback ---
+function update_max_gain_cb(src, ~)
+  global h1
+  new_max = str2num(get(src, 'String'));
+
+  if ~isempty(new_max) && new_max > 0
+    current_val = get(h1.slider_gain, 'Value');
+    set(h1.slider_gain, 'Max', new_max);
+
+    % If current slider value exceeds the new max, clamp it down
+    if current_val > new_max
+      set(h1.slider_gain, 'Value', new_max);
+      slider_adjustgain(h1.slider_gain, []);
+    endif
+  else
+    % Reset box to current max if input is invalid
+    set(src, 'String', num2str(get(h1.slider_gain, 'Max')));
+    errordlg('Please enter a valid positive number for the maximum gain.', 'Invalid Input');
+  endif
+endfunction
+
+% --- Refresh All Views (Includes live C sync) ---
 function refresh_all()
+  global h1 h3
+  if isfield(h3, 'select_compensator') && ishandle(h3.select_compensator)
+    if get(h3.select_compensator, 'Value') == 1
+      h3.sys = h1.C;
+    endif
+  else
+    h3.sys = h1.C;
+  endif
+
   plots();
   plotrlocus();
   plotbode();
@@ -743,15 +777,80 @@ function plotbode()
   axes(h2.axbm); cla(h2.axbm);
   axes(h2.axbp); cla(h2.axbp);
   try
-    [mag, phase, w] = bode(h1.G * h1.C);
-    semilogx(h2.axbm, w, mag2db(squeeze(mag))); grid(h2.axbm, 'on');
+    sys_ol = h1.G * h1.C;
+    [mag, phase, w] = bode(sys_ol);
+    MAG = mag2db(squeeze(mag));
+    PHA = squeeze(phase);
+
+    % Magnitude plot
+    semilogx(h2.axbm, w, MAG); grid(h2.axbm, 'on');
     ylabel(h2.axbm, 'Magnitude (dB)');
     title(h2.axbm, 'Open-Loop Bode Diagram');
 
-    semilogx(h2.axbp, w, squeeze(phase)); grid(h2.axbp, 'on');
+    % Phase plot
+    semilogx(h2.axbp, w, PHA); grid(h2.axbp, 'on');
     xlabel(h2.axbp, 'Frequency (rad/s)');
     ylabel(h2.axbp, 'Phase (deg)');
-  catch
+
+    % Mark poles and zeros on Bode curves
+    [olpol, olzer, ~, ~] = getZP_local(sys_ol);
+    poles_r = real(olpol)';
+    poles_i = imag(olpol)';
+    zeros_r = real(olzer)';
+    zeros_i = imag(olzer)';
+
+    wparray = sqrt(poles_r.^2 + poles_i.^2);
+    wzarray = sqrt(zeros_r.^2 + zeros_i.^2);
+
+    if (!isempty(wparray))
+      idxp = zeros(size(wparray));
+      for i = 1:length(wparray)
+        idxp(i) = find(w <= wparray(i), 1, 'last');
+        if isempty(idxp(i)), idxp(i) = 1; endif
+      endfor
+      axes(h2.axbm); hold on; semilogx(w(idxp), MAG(idxp), 'x', 'color', 'r', 'markersize', 8, 'linewidth', 4); hold off;
+      axes(h2.axbp); hold on; semilogx(w(idxp), PHA(idxp), 'x', 'color', 'r', 'markersize', 8, 'linewidth', 4); hold off;
+    endif
+
+    if (!isempty(wzarray))
+      idxz = zeros(size(wzarray));
+      for i = 1:length(wzarray)
+        idxz(i) = find(w <= wzarray(i), 1, 'last');
+        if isempty(idxz(i)), idxz(i) = 1; endif
+      endfor
+      axes(h2.axbm); hold on; semilogx(w(idxz), MAG(idxz), 'o', 'color', 'g', 'markersize', 8, 'linewidth', 4); hold off;
+      axes(h2.axbp); hold on; semilogx(w(idxz), PHA(idxz), 'o', 'color', 'g', 'markersize', 8, 'linewidth', 4); hold off;
+    endif
+
+    % Calculate gain and phase margins
+    [Gm, Pm, Wgm, Wpm] = margin(sys_ol);
+
+    Gm  = round(Gm*10)/10;
+    Pm  = round(Pm*10)/10;
+    Wgm = round(Wgm*10)/10;
+    Wpm = round(Wpm*10)/10;
+
+    descrm = {strcat('G.M:  ', num2str(Gm)); ...
+              strcat('Freq:  ', num2str(Wgm))};
+
+    descrp = {strcat('P.M:  ', num2str(Pm)); ...
+              strcat('Freq:  ', num2str(Wpm))};
+
+    % Display margins on Magnitude axis
+    axes(h2.axbm);
+    xLimM = get(h2.axbm, 'XLim');
+    yLimM = get(h2.axbm, 'YLim');
+    text(10^(log10(xLimM(1)) + 0.05*(log10(xLimM(2)) - log10(xLimM(1)))), ...
+         yLimM(1) + 0.2*(yLimM(2) - yLimM(1)), descrm);
+
+    % Display margins on Phase axis
+    axes(h2.axbp);
+    xLimP = get(h2.axbp, 'XLim');
+    yLimP = get(h2.axbp, 'YLim');
+    text(10^(log10(xLimP(1)) + 0.05*(log10(xLimP(2)) - log10(xLimP(1)))), ...
+         yLimP(1) + 0.2*(yLimP(2) - yLimP(1)), descrp);
+  catch err
+    warning(['Bode plot error: ', err.message]);
   end_try_catch
 endfunction
 
