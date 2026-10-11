@@ -4,7 +4,7 @@ function editarchitecture()
   global fig4 h4
 
   % Guarantee h4 exists as a valid structure BEFORE setting any fields
-  if !isstruct(h4)
+  if ~isstruct(h4)
     h4 = struct();
   endif
 
@@ -19,15 +19,15 @@ function editarchitecture()
   set(fig4, 'resize', 'off');
 
   % -------------------------------------------------------------------
-  % 1. Create Layout Axes First
+  % 1. Create Layout Axes First (Shifted and sized to prevent overlapping)
   % -------------------------------------------------------------------
-  h4.ax7 = axes(); set(h4.ax7, "position", [0.25 0.35 0.75 0.8]);
-  h4.ax6 = axes(); set(h4.ax6, "position", [0.05 0.10 0.2 0.1]);
-  h4.ax5 = axes(); set(h4.ax5, "position", [0.05 0.25 0.2 0.1]);
-  h4.ax4 = axes(); set(h4.ax4, "position", [0.05 0.40 0.2 0.1]);
-  h4.ax3 = axes(); set(h4.ax3, "position", [0.05 0.55 0.2 0.1]);
-  h4.ax2 = axes(); set(h4.ax2, "position", [0.05 0.70 0.2 0.1]);
-  h4.ax1 = axes(); set(h4.ax1, "position", [0.05 0.85 0.2 0.1]);
+  h4.ax7 = axes(); set(h4.ax7, "position", [0.25, 0.57, 0.72, 0.34]);
+  h4.ax6 = axes(); set(h4.ax6, "position", [0.05, 0.10, 0.2, 0.1]);
+  h4.ax5 = axes(); set(h4.ax5, "position", [0.05, 0.25, 0.2, 0.1]);
+  h4.ax4 = axes(); set(h4.ax4, "position", [0.05, 0.40, 0.2, 0.1]);
+  h4.ax3 = axes(); set(h4.ax3, "position", [0.05, 0.55, 0.2, 0.1]);
+  h4.ax2 = axes(); set(h4.ax2, "position", [0.05, 0.70, 0.2, 0.1]);
+  h4.ax1 = axes(); set(h4.ax1, "position", [0.05, 0.85, 0.2, 0.1]);
 
   % -------------------------------------------------------------------
   % 2. Image Loading
@@ -63,7 +63,7 @@ function editarchitecture()
   axes(h4.ax6); image(sisoconfig{6}); axis off; axis image;
 
   if isfield(h4, 'img') && isfield(h4.img, 'sisoCONFIG1')
-    axes(h4.ax7); image(h4.img.sisoCONFIG1); axis off; axis image;
+    axes(h4.ax7); image(h4.img.sisoCONFIG1); axis off; axis normal;
   endif
 
   % -------------------------------------------------------------------
@@ -146,37 +146,37 @@ function edit_architecture_cb(src, evt)
   endif
 
   if get(h4.b1, 'value') && isfield(h4.img, 'sisoCONFIG1')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG1); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG1); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'F'); set(h4.gp3_identifier2, 'String', 'C'); set(h4.gp3_identifier3, 'String', 'G'); set(h4.gp3_identifier4, 'String', 'H'); set(h4.gp3_identifier5, 'String', '--'); set(h4.gp3_identifier6, 'String', '--'); set(h4.gp3_identifier7, 'String', '--');
     set(h4.gp3_identifier1_edit, 'String', 'F'); set(h4.gp3_identifier2_edit, 'String', 'C'); set(h4.gp3_identifier3_edit, 'String', 'G'); set(h4.gp3_identifier4_edit, 'String', 'H'); set(h4.gp3_identifier5_edit, 'String', '--'); set(h4.gp3_identifier6_edit, 'String', '--'); set(h4.gp3_identifier7_edit, 'String', '--');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '--'); set(h4.gp3_identifier6_edit2, 'String', '--'); set(h4.gp3_identifier7_edit2, 'String', '--');
     h4.set_arch = 1;
   elseif get(h4.b2, 'value') && isfield(h4.img, 'sisoCONFIG2')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG2); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG2); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'F'); set(h4.gp3_identifier2, 'String', 'C'); set(h4.gp3_identifier3, 'String', 'G'); set(h4.gp3_identifier4, 'String', 'H'); set(h4.gp3_identifier5, 'String', '--'); set(h4.gp3_identifier6, 'String', '--'); set(h4.gp3_identifier7, 'String', '--');
     set(h4.gp3_identifier1_edit, 'String', 'F'); set(h4.gp3_identifier2_edit, 'String', 'C'); set(h4.gp3_identifier3_edit, 'String', 'G'); set(h4.gp3_identifier4_edit, 'String', 'H'); set(h4.gp3_identifier5_edit, 'String', '--'); set(h4.gp3_identifier6_edit, 'String', '--'); set(h4.gp3_identifier7_edit, 'String', '--');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '--'); set(h4.gp3_identifier6_edit2, 'String', '--'); set(h4.gp3_identifier7_edit2, 'String', '--');
     h4.set_arch = 2;
   elseif get(h4.b3, 'value') && isfield(h4.img, 'sisoCONFIG3')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG3); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG3); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'F'); set(h4.gp3_identifier2, 'String', 'C'); set(h4.gp3_identifier3, 'String', 'G'); set(h4.gp3_identifier4, 'String', 'H'); set(h4.gp3_identifier5, 'String', '--'); set(h4.gp3_identifier6, 'String', '--'); set(h4.gp3_identifier7, 'String', '--');
     set(h4.gp3_identifier1_edit, 'String', 'F'); set(h4.gp3_identifier2_edit, 'String', 'C'); set(h4.gp3_identifier3_edit, 'String', 'G'); set(h4.gp3_identifier4_edit, 'String', 'H'); set(h4.gp3_identifier5_edit, 'String', '--'); set(h4.gp3_identifier6_edit, 'String', '--'); set(h4.gp3_identifier7_edit, 'String', '--');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '--'); set(h4.gp3_identifier6_edit2, 'String', '--'); set(h4.gp3_identifier7_edit2, 'String', '--');
     h4.set_arch = 3;
   elseif get(h4.b4, 'value') && isfield(h4.img, 'sisoCONFIG4')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG4); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG4); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'C1'); set(h4.gp3_identifier2, 'String', 'C2'); set(h4.gp3_identifier3, 'String', 'G'); set(h4.gp3_identifier4, 'String', 'H'); set(h4.gp3_identifier5, 'String', '--'); set(h4.gp3_identifier6, 'String', '--'); set(h4.gp3_identifier7, 'String', '--');
     set(h4.gp3_identifier1_edit, 'String', 'C1'); set(h4.gp3_identifier2_edit, 'String', 'C2'); set(h4.gp3_identifier3_edit, 'String', 'G'); set(h4.gp3_identifier4_edit, 'String', 'H'); set(h4.gp3_identifier5_edit, 'String', '--'); set(h4.gp3_identifier6_edit, 'String', '--'); set(h4.gp3_identifier7_edit, 'String', '--');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '--'); set(h4.gp3_identifier6_edit2, 'String', '--'); set(h4.gp3_identifier7_edit2, 'String', '--');
     h4.set_arch = 4;
   elseif get(h4.b5, 'value') && isfield(h4.img, 'sisoCONFIG5')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG5); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG5); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'F'); set(h4.gp3_identifier2, 'String', 'C'); set(h4.gp3_identifier3, 'String', 'G1'); set(h4.gp3_identifier4, 'String', 'G2'); set(h4.gp3_identifier5, 'String', 'Gd'); set(h4.gp3_identifier6, 'String', '--'); set(h4.gp3_identifier7, 'String', '--');
     set(h4.gp3_identifier1_edit, 'String', 'F'); set(h4.gp3_identifier2_edit, 'String', 'C'); set(h4.gp3_identifier3_edit, 'String', 'G1'); set(h4.gp3_identifier4_edit, 'String', 'G2'); set(h4.gp3_identifier5_edit, 'String', 'Gd'); set(h4.gp3_identifier6_edit, 'String', '--'); set(h4.gp3_identifier7_edit, 'String', '--');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier6_edit2, 'String', ''); set(h4.gp3_identifier7_edit2, 'String', '--');
     h4.set_arch = 5;
   elseif get(h4.b6, 'value') && isfield(h4.img, 'sisoCONFIG6')
-    axes(h4.ax7);  image(h4.img.sisoCONFIG6); axis off; axis image;
+    axes(h4.ax7);  image(h4.img.sisoCONFIG6); axis off; axis normal;
     set(h4.gp3_identifier1, 'String', 'F'); set(h4.gp3_identifier2, 'String', 'C1'); set(h4.gp3_identifier3, 'String', 'C2'); set(h4.gp3_identifier4, 'String', 'G1'); set(h4.gp3_identifier5, 'String', 'G2'); set(h4.gp3_identifier6, 'String', 'H1'); set(h4.gp3_identifier7, 'String', 'H2');
     set(h4.gp3_identifier1_edit, 'String', 'F'); set(h4.gp3_identifier2_edit, 'String', 'C1'); set(h4.gp3_identifier3_edit, 'String', 'C2'); set(h4.gp3_identifier4_edit, 'String', 'G1'); set(h4.gp3_identifier5_edit, 'String', 'G2'); set(h4.gp3_identifier6_edit, 'String', 'H1'); set(h4.gp3_identifier7_edit, 'String', 'H2');
     set(h4.gp3_identifier1_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier2_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier3_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier4_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier5_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier6_edit2, 'String', '<1x1 zpk>'); set(h4.gp3_identifier7_edit2, 'String', '<1x1 zpk>');
