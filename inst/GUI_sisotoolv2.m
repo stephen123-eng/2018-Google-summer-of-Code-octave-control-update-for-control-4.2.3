@@ -1,4 +1,4 @@
-function GUI_sisotoolv2_14(varargin)
+function GUI_sisotoolv2(varargin)
   global fig1 h1 h2 h3
 
   graphics_toolkit qt
