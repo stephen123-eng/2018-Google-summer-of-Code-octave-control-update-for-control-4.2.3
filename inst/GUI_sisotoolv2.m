@@ -10,9 +10,25 @@ function GUI_sisotoolv2(varargin)
     warning('Control package could not be auto-loaded. Make sure it is installed.');
   end_try_catch
 
+  % Initialization of global model parameters
+  if isfield(h1, 'G') == 0
+    h1.G = tf(0.01, [1 12 20]);
+    h1.G_str = '0.01 / ((s+10)*(s+2))';
+  else
+    % If h1.G was passed externally via sisotool, generate its string representation if missing
+    if isfield(h1, 'G_str') == 0
+      try
+        [num, den] = tfdata(h1.G, 'v');
+        h1.G_str = sprintf('tf(%s, %s)', mat2str(num), mat2str(den));
+      catch
+        h1.G_str = '0.01 / ((s+10)*(s+2))';
+      end_try_catch
+    endif
+  endif
+
 % Initialization of global model parameters
-  if isfield(h1, 'G') == 0, h1.G = tf(0.01, [1 12 20]); endif
-  if isfield(h1, 'G_str') == 0, h1.G_str = '0.01 / ((s+10)*(s+2))'; endif
+  #if isfield(h1, 'G') == 0, h1.G = tf(0.01, [1 12 20]); endif
+  #if isfield(h1, 'G_str') == 0, h1.G_str = '0.01 / ((s+10)*(s+2))'; endif
   if isfield(h1, 'C') == 0, h1.C = zpk([],[],1); endif
   if isfield(h1, 'H') == 0, h1.H = zpk([],[],1); endif
   if isfield(h1, 'F') == 0, h1.F = zpk([],[],1); endif
@@ -44,7 +60,7 @@ function GUI_sisotoolv2(varargin)
   uicontrol('Parent', ctrl_panel, 'Style', 'text', 'String', 'Plant G(s):', ...
             'Units', 'normalized', 'Position', [0.05, 0.88, 0.25, 0.08], 'HorizontalAlignment', 'left');
 
-  h1.enter_plant = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', '0.01 / ((s+10)*(s+2))', ...
+  h1.enter_plant = uicontrol('Parent', ctrl_panel, 'Style', 'edit', 'String', h1.G_str, ...
                              'Units', 'normalized', 'Position', [0.32, 0.87, 0.63, 0.09], ...
                              'BackgroundColor', 'white', 'Callback', @update_plant_cb);
 
